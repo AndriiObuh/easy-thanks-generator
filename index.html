@@ -120,7 +120,7 @@
                 <p class="text-teal-300 text-sm mb-2" id="message-label">Ваше повідомлення:</p>
                 <div class="output-box">
                     <p id="generated-message" class="text-lg whitespace-pre-wrap"></p>
-                    <!-- Container for the clickable attribution link -->
+                    <!-- Container for the clickable attribution link (now displays URL text) -->
                     <div id="attribution-link-container" class="mt-4 text-sm text-gray-400"></div> 
                     
                     <button id="copy-button" class="mt-4 w-full py-2 px-4 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-md transition duration-150 ease-in-out">Копіювати</button>
@@ -138,11 +138,12 @@
 
     <!-- JavaScript Logic (Об'єднано з data.js та script.js) -->
     <script>
-        // --- 1. DATA SOURCE (CONTENT) - Інтегровано з data.js ---
+        // --- 1. DATA SOURCE (CONTENT) ---
         // !!! ВАЖЛИВО: ВАШЕ РЕАЛЬНЕ ПОСИЛАННЯ "BUY ME A COFFEE" ВСТАВЛЕНО ТУТ !!!
         const coffeeLinkPlaceholder = "https://buymeacoffee.com/andriiobuh"; 
         const creatorNameStorageKey = "easyThanksCreatorName";
-        const generatorLinkPlaceholder = "#"; 
+        // !!! ВАЖЛИВО: Посилання на ваш генератор подяки (GitHub Pages) !!!
+        const generatorLinkPlaceholder = "https://andriiobuh.github.io/easy-thanks-generator/"; 
         
         const data = {
             "UA": {
@@ -165,21 +166,23 @@
                         amount: "Сума Доната",
                         creatorName: "Ваше Ім'я / Нікнейм (Підпис)",
                     },
-                    // Додано текст атрибуції для копіювання
-                    attributionText: "— Створено за допомогою Easy Thanks Generator" 
+                    // Змінено текст, щоб він містив лише префікс
+                    attributionText: "Створено за допомогою" 
                 },
+                // *** ВИПРАВЛЕНО: УСІ АНГЛІЙСЬКІ СЛОВА ЗАМІНЕНО НА УКРАЇНСЬКІ ***
                 "Актор-Невдаха": [
-                    "🎭 Який фінал! [NAME]! Ваші [AMOUNT] – це бурхливі овації, яких ця трагедія ще не бачила! Я знімаю капелюха перед вашою режисерською геніальністю. Браво!\nSincerely,\nYour Failed Actor [CREATORNAME].",
-                    "😭 Це не донат! Це запрошення на головну роль у моєму житті, [NAME]! Ці [AMOUNT] – це гонорар, який змушує мене заплакати від радості! Світло! Камера! Гроші!\nSincerely,\nYour Failed Actor [CREATORNAME].",
-                    "🎭 [NAME]! [AMOUNT]! Це не фінансування! Це продовження мого провального, але геніального, серіалу! Завдяки Вам, завіса не падає! Ви — мій найкращий продюсер!\nSincerely,\nYour Failed Actor [CREATORNAME].",
-                    "😭 [NAME], Ваші [AMOUNT] — це аванс за головну роль у трагедії \"Мій Бюджет\"! Я буду грати вдячність цілодобово! Я Вас обожнюю!\nSincerely,\nYour Failed Actor [CREATORNAME].",
-                    "🎭 [NAME], Ви щойно заплатили за мій грим! Ці [AMOUNT] дозволять мені виглядати ще більш трагічно! Я обіцяю перевтілення у найдраматичнішу версію себе. Дякую!\nSincerely,\nYour Failed Actor [CREATORNAME].",
-                    "😭 Антракт закінчено! Завдяки [AMOUNT] від [NAME], завіса піднімається! Я обіцяю, що драматизм наступної сцени буде зашкалювати! Дякую, мій спонсор-меценат!\nSincerely,\nYour Failed Actor [CREATORNAME].",
-                    "🎭 Я стою на колінах, [NAME]! Ці [AMOUNT] – це реставрація мого зламаного образу. Я дякую Вам, мій єдиний глядач! Сльози течуть по гриму!\nSincerely,\nYour Failed Actor [CREATORNAME].",
-                    "😭 [NAME], я готовий до монологу! Твої [AMOUNT] заслуговують на цей пафос. Я буду перегравати кожен кадр, поки ти не скажеш: Досить! Дякую, інвесторе!\nSincerely,\nYour Failed Actor [CREATORNAME].",
-                    "🎭 Це [AMOUNT] від [NAME]! Сенсація! Я вимагаю Оскар для такого благодійника! Ти викупив мій провальний тиждень! Дякую за фінальні оплески.\nSincerely,\nYour Failed Actor [CREATORNAME].",
-                    "😭 Ти – головний герой, [NAME]! А я лише другорядний актор, якому ти кинув [AMOUNT] на сцену. Ця трагікомедія триває! Дякую, генію!\nSincerely,\nYour Failed Actor [CREATORNAME].",
+                    "🎭 Який фінал! [NAME]! Ваші [AMOUNT] – це бурхливі овації, яких ця трагедія ще не бачила! Я знімаю капелюха перед вашою режисерською геніальністю. Браво!\nЗ повагою,\nВаш Актор-Невдаха [CREATORNAME].",
+                    "😭 Це не донат! Це запрошення на головну роль у моєму житті, [NAME]! Ці [AMOUNT] – це гонорар, який змушує мене заплакати від радості! Світло! Камера! Гроші!\nЗ повагою,\nВаш Актор-Невдаха [CREATORNAME].",
+                    "🎭 [NAME]! [AMOUNT]! Це не фінансування! Це продовження мого провального, але геніального, серіалу! Завдяки Вам, завіса не падає! Ви — мій найкращий продюсер!\nЗ повагою,\nВаш Актор-Невдаха [CREATORNAME].",
+                    "😭 [NAME], Ваші [AMOUNT] — це аванс за головну роль у трагедії \"Мій Бюджет\"! Я буду грати вдячність цілодобово! Я Вас обожнюю!\nЗ повагою,\nВаш Актор-Невдаха [CREATORNAME].",
+                    "🎭 [NAME], Ви щойно заплатили за мій грим! Ці [AMOUNT] дозволять мені виглядати ще більш трагічно! Я обіцяю перевтілення у найдраматичнішу версію себе. Дякую!\nЗ повагою,\nВаш Актор-Невдаха [CREATORNAME].",
+                    "😭 Антракт закінчено! Завдяки [AMOUNT] від [NAME], завіса піднімається! Я обіцяю, що драматизм наступної сцени буде зашкалювати! Дякую, мій спонсор-меценат!\nЗ повагою,\nВаш Актор-Невдаха [CREATORNAME].",
+                    "🎭 Я стою на колінах, [NAME]! Ці [AMOUNT] – це реставрація мого зламаного образу. Я дякую Вам, мій єдиний глядач! Сльози течуть по гриму!\nЗ повагою,\nВаш Актор-Невдаха [CREATORNAME].",
+                    "😭 [NAME], я готовий до монологу! Твої [AMOUNT] заслуговують на цей пафос. Я буду перегравати кожен кадр, поки ти не скажеш: Досить! Дякую, інвесторе!\nЗ повагою,\nВаш Актор-Невдаха [CREATORNAME].",
+                    "🎭 Це [AMOUNT] від [NAME]! Сенсація! Я вимагаю Оскар для такого благодійника! Ти викупив мій провальний тиждень! Дякую за фінальні оплески.\nЗ повагою,\nВаш Актор-Невдаха [CREATORNAME].",
+                    "😭 Ти – головний герой, [NAME]! А я лише другорядний актор, якому ти кинув [AMOUNT] на сцену. Ця трагікомедія триває! Дякую, генію!\nЗ повагою, Ваш Актор-Невдаха [CREATORNAME].",
                 ],
+                // *** КІНЕЦЬ ВИПРАВЛЕНЬ ***
                 "Художник-Мемер": [
                     "🔥 [NAME]! Ти – просто легенда! Твої [AMOUNT] – це сабскрайб найвищого рівня! Дякую, тепер я можу ще тиждень жити на цьому вайбі! 😎\nЗ повагою Ваш Художник-Мемер [CREATORNAME].",
                     "😎 Це легітно! Я не вірив, що ти це зробиш, [NAME]. Твої [AMOUNT] офіційно визнані як мій краш цього місяця. Greatest Of All Time! 🔥\nЗ повагою Ваш Художник-Мемер [CREATORNAME].",
@@ -221,7 +224,7 @@
                     "👁️ Тихий голос повідомляє: [NAME] передав [AMOUNT]. Ця сума фіксується Великим Оком. Не видавайте свого місцезнаходження! Дякую, Агенте. 🤫\nЗ повагою Ваш Конспіролог-Параноїк [CREATORNAME].",
                     "👽 [NAME]! Ці [AMOUNT] — неземний знак! Я розшифрую це послання! Вони думають, що це гроші, але ми знаємо правду. Правда ближче, ніж здається! 👁\nЗ повагою Ваш Конспіролог-Параноїк [CREATORNAME].",
                     "🤫 [AMOUNT] від [NAME]... Зміна плану! Ви передали докази. Я їх заховаю у найнадійнішому місці! Нікому не кажіть, що Ви це зробили! 🤫\nЗ повагою Ваш Конспіролог-Параноїк [CREATORNAME].",
-                    "👁️ [NAME], Ваша сума [AMOUNT]! Це перший рівень ініціації! Ласкаво просимо до Таємного Товариства! Наступний внесок відкриє Вам повне знання. 👽\nЗ повагою Ваш Конспіролог-Параноїк [CREATORNAME].",
+                    "👁️ [NAME], Ваша сума [AMOUNT] — це перший рівень ініціації! Ласкаво просимо до Таємного Товариства! Наступний внесок відкриє Вам повне знання. 👽\nЗ повагою Ваш Конспіролог-Параноїк [CREATORNAME].",
                     "👽 Вони кажуть, що це випадковість. Але [AMOUNT] від [NAME] має глибокий, прихований сенс! Я вивчаю цей символ. Ваше завдання виконано. 👁\nЗ повагою Ваш Конспіролог-Параноїк [CREATORNAME].",
                     "🤫 [NAME]. [AMOUNT]. Кодове слово прийнято. Ви успішно впровадилися в систему. Дякую за забезпечення операції. Залишайтеся на зв'язку! 🤫\nЗ повагою Ваш Конспіролог-Параноїк [CREATORNAME].",
                     "👁️ [NAME]! Ваш [AMOUNT]! Це не гроші, це код доступу! Вони думають, що це благодійність! Дякую, що замаскували цю критичну інформацію! 👽\nЗ повагою Ваш Конспіролог-Параноїк [CREATORNAME].",
@@ -261,7 +264,7 @@
                         amount: "Donation Amount",
                         creatorName: "Your Name / Nickname (Signature)",
                     },
-                    attributionText: "— Created with Easy Thanks Generator"
+                    attributionText: "Created with"
                 },
                 "The Failed Actor": [
                     "🎭 What a finale! [NAME]! Your [AMOUNT] is the thunderous ovation this tragedy has yet to see! I take my hat off to your directorial genius. Bravo!\nSincerely,\nYour Failed Actor [CREATORNAME].",
@@ -294,7 +297,7 @@
                     "📜 Protocol No. 14: [AMOUNT] has been received from [NAME]. This is a minimum requirement, but it is documented. We expect a massive mobilization of funds from you in the future. Execute! 👑\nSincerely, Your Mad Dictator [CREATORNAME].",
                     "👑 [NAME], your financial report in the amount of [AMOUNT] is Approved! I hereby grant you temporary enjoyment of your freedom. Be Thankful! 📜\nSincerely, Your Mad Dictator [CREATORNAME].",
                     "📜 Reminder: The contribution of [AMOUNT] from [NAME] is filed. The Dictatorship requires more resources for global domination. Start acting according to My Plan! 👑\nSincerely, Your Mad Dictator [CREATORNAME].",
-                    "👑 [AMOUNT] from [NAME]! Decree: Enter this fact into the Citizen's Personal File! You are temporarily granted an upgrade in status. But My Eye is still watching! 📜\nSincerely, Your Mad Dictator [CREATORNAME].",
+                    "📜 Order! [NAME], I hereby sign off on receiving [AMOUNT]. This sum will be used to strengthen My authority. You have aided the destiny of mankind! 👑\nSincerely, Your Mad Dictator [CREATORNAME].",
                     "📜 Order! [NAME], I hereby sign off on receiving [AMOUNT]. This sum will be used to strengthen My authority. You have aided the destiny of mankind! 👑\nSincerely, Your Mad Dictator [CREATORNAME].",
                     "👑 Gромадянине [NAME], [AMOUNT]! I permit you to submit this tranche. Your loyalty will be assessed... perhaps... one day. Glory to Me! 📜\nSincerely, Your Mad Dictator [CREATORNAME].",
                     "📜 [NAME], your financial document in the amount of [AMOUNT] has passed audit. You do not arouse suspicion. For now. Thank you for your temporary obedience. 👑\nSincerely, Your Mad Dictator [CREATORNAME].",
@@ -308,7 +311,7 @@
                     "🧐 I shall classify [AMOUNT] from [NAME] as a \"Test Grant.\" I anticipate a Full-Scale Grant of five times the volume. Do not cease at superficial analysis! 🙄\nSincerely, Your Disappointed Professor [CREATORNAME].",
                     "🙄 [NAME]. [AMOUNT]. This does not qualify as Level \"A\" financial endorsement. It is, rather, a condescending nod. I am compelled to accept it, but only because I abhor violating protocols. 🧐\nSincerely, Your Disappointed Professor [CREATORNAME].",
                     "🙄 This [AMOUNT] from [NAME] is like a minor contribution to a grand science. Let it serve as an example to others. But do not presume this is the conclusion. 🙄\nSincerely, Your Disappointed Professor [CREATORNAME].",
-                    "🧐 [NAME]! [AMOUNT]! Allow me to state: this is not the \"Theory of Everything\" in the financial realm. It is a fragment of my future budgetary equation. Thank you for this small, but necessary, data. 🧐\nSincerely, Your Disappointed Professor [CREATORNAME].",
+                    "🧐 [NAME]! [AMOUNT]! Allow me to state: this is not the \"Theory of Everything\" in the financial realm. It is a fragment of my future budgetary equation. Thank thank you for this small, but necessary, data. 🧐\nSincerely, Your Disappointed Professor [CREATORNAME].",
                     "🙄 [NAME], I have analyzed your transaction [AMOUNT]. It exhibits a rudimentary comprehension of philanthropy. Endeavor to deepen this comprehension. Grade: \"Satisfactory.\" 🙄\nSincerely, Your Disappointed Professor [CREATORNAME].",
                 ],
                 "The Conspiracy Theorist": [
@@ -362,15 +365,12 @@
             const creatorNameInput = document.querySelector('.creator-name-input');
 
             // --- LOCAL STORAGE LOGIC (ЗБЕРЕЖЕННЯ ІМЕНІ) ---
-            // 1. Load saved name on startup
             const savedCreatorName = localStorage.getItem(creatorNameStorageKey);
             if (savedCreatorName) {
                 creatorNameInput.value = savedCreatorName;
             }
 
-            // 2. Save name when input changes
             creatorNameInput.addEventListener('input', () => {
-                // Save only if the input is not empty
                 if (creatorNameInput.value.trim() !== '') {
                     localStorage.setItem(creatorNameStorageKey, creatorNameInput.value.trim());
                 } else {
@@ -380,7 +380,6 @@
 
             // Set the dynamic footer link
             if (coffeeLinkElement) {
-                // !!! ВАЖЛИВО: Ваше реальне посилання "Buy Me a Coffee" ВСТАВЛЕНО ТУТ !!!
                 coffeeLinkElement.href = coffeeLinkPlaceholder; 
             }
 
@@ -394,7 +393,6 @@
             function populateLanguages() {
                 const langKeys = Object.keys(data);
                 
-                // Використовуємо локалізацію за замовчуванням (UA) для placeholder
                 const defaultLocalization = data["UA"]._localization;
 
                 languageSelect.innerHTML = `<option value="">${defaultLocalization.selectLanguage}</option>`;
@@ -515,14 +513,15 @@
                 // Render main message
                 generatedMessageElement.textContent = message;
 
-                // Render the attribution link as a clickable HTML element
-                const attributionText = localization.attributionText || data["UA"]._localization.attributionText;
+                // Render the attribution link as a clickable URL text (for better copy-paste)
+                const attributionPrefix = localization.attributionText || data["UA"]._localization.attributionText;
                 attributionLinkContainer.innerHTML = `
-                    <p class="mt-2">
+                    <p class="mt-2 text-gray-400 text-sm">
+                        — ${attributionPrefix} 
                         <a href="${generatorLinkPlaceholder}" 
                            target="_blank" 
-                           class="text-teal-400 hover:text-teal-300 transition-colors underline cursor-pointer">
-                            ${attributionText}
+                           class="text-teal-400 hover:text-teal-300 transition-colors underline cursor-pointer break-all">
+                            ${generatorLinkPlaceholder}
                         </a>
                     </p>
                 `;
@@ -533,25 +532,19 @@
                 copyButton.style.backgroundColor = '#4A5568';
             });
             
-            // 2.6 Copy functionality (copies message + attribution)
+            // 2.6 Copy functionality (copies message + attribution with raw URL text)
             copyButton.addEventListener('click', () => {
                 const localization = data[languageSelect.value]?._localization || data["UA"]._localization;
                 
                 // 1. Get the generated message 
                 const messageText = generatedMessageElement.textContent.trim();
                 
-                // 2. Get the attribution text (removing leading dash and spaces for cleaner copy)
-                // We use textContent here, then clean the string.
-                let attributionTextClean = attributionLinkContainer.textContent.trim();
-                // If the attribution text starts with the localized dash, remove it for cleaner copy-paste
-                if (attributionTextClean.startsWith(localization.attributionText.split('—')[0].trim())) {
-                    attributionTextClean = localization.attributionText.trim();
-                } else {
-                    attributionTextClean = attributionLinkContainer.textContent.trim();
-                }
+                // 2. Get the attribution prefix text (e.g., "Створено за допомогою")
+                const attributionPrefix = localization.attributionText || data["UA"]._localization.attributionText;
 
-                // 3. Combine them for a clean copy (two line breaks for separation)
-                const messageToCopy = messageText + '\n\n' + attributionTextClean;
+                // 3. Combine them for a clean copy (two line breaks for separation, and adding the raw URL text)
+                // Формат: [Подяка]\n\n— [Префікс] [URL]
+                const messageToCopy = messageText + '\n\n— ' + attributionPrefix + ' ' + generatorLinkPlaceholder;
                 
                 const tempTextArea = document.createElement('textarea');
                 tempTextArea.value = messageToCopy;
@@ -579,4 +572,3 @@
     </script>
 </body>
 </html>
-
