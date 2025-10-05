@@ -101,7 +101,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <input type="text" class="patron-name-input form-input" placeholder="Patron's Name">
-                <input type="number" step="0.01" min="0" class="donation-amount-input form-input" placeholder="Donation Amount">
+                <input type="text" class="donation-amount-input form-input" placeholder="Donation Amount">
                 <input type="text" class="creator-name-input form-input md:col-span-2" placeholder="Your Name / Nickname (Signature)">
             </div>
 
@@ -133,6 +133,237 @@
         </div>
     </div>
 
-    <script src="script.js" type="module" defer></script> 
+    <script type="module">
+        // Оновлено: Додаємо type="module" для підтримки import/export
+        import { 
+            data, 
+            coffeeLinkPlaceholder, 
+            creatorNameStorageKey, 
+            generatorLinkPlaceholder 
+        } from './data.js';
+
+
+        // --- 2. SCRIPT LOGIC (JAVASCRIPT) ---
+        const ELEMENTS = {
+            title: document.getElementById('app-title'),
+            subtitle: document.getElementById('app-subtitle'),
+            patronNameInput: document.querySelector('.patron-name-input'),
+            donationAmountInput: document.querySelector('.donation-amount-input'),
+            creatorNameInput: document.querySelector('.creator-name-input'),
+            languageSelect: document.querySelector('.generator-language'),
+            toneSelect: document.querySelector('.generator-tone'),
+            generateButton: document.getElementById('generate-button-text'),
+            outputContainer: document.getElementById('output-container'),
+            generatedMessage: document.getElementById('generated-message'),
+            messageLabel: document.getElementById('message-label'),
+            copyButton: document.getElementById('copy-button'),
+            coffeeLink: document.getElementById('coffee-link'),
+            attributionContainer: document.getElementById('attribution-link-container'),
+            selectTonePlaceholder: document.getElementById('select-tone-placeholder')
+        };
+
+        // Встановлюємо 'EN' як мову за замовчуванням
+        let currentLang = 'EN'; 
+
+        // Helper function to get a random item from an array
+        const getRandomMessage = (messages) => {
+            return messages[Math.floor(Math.random() * messages.length)];
+        };
+
+        // Populate Tone/Style options based on the current language
+        const populateToneOptions = (langKey) => {
+            const tones = data[langKey];
+            const localization = tones._localization;
+            
+            // Clear existing options
+            ELEMENTS.toneSelect.innerHTML = '';
+            
+            // Re-create the placeholder option
+            const placeholder = document.createElement('option');
+            placeholder.value = "";
+            placeholder.textContent = localization.selectTone; // Use localized placeholder
+            placeholder.id = "select-tone-placeholder";
+            ELEMENTS.toneSelect.appendChild(placeholder);
+            
+            // Populate actual tones
+            Object.keys(tones).forEach(key => {
+                if (key !== '_localization') {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = key;
+                    ELEMENTS.toneSelect.appendChild(option);
+                }
+            });
+            // Select the placeholder by default
+            ELEMENTS.toneSelect.value = "";
+        };
+
+        // Populate Language options
+        const populateLanguageOptions = () => {
+            const langs = Object.keys(data);
+            ELEMENTS.languageSelect.innerHTML = ''; // Clear existing
+            
+            langs.forEach(langKey => {
+                const option = document.createElement('option');
+                option.value = langKey;
+                
+                // Display language names in the native tongue if possible
+                let langName;
+                if (langKey === 'UA') {
+                    langName = 'Українська (UA)';
+                } else if (langKey === 'EN') {
+                    langName = 'English (EN)';
+                } else {
+                    langName = langKey;
+                }
+                
+                option.textContent = langName;
+                ELEMENTS.languageSelect.appendChild(option);
+            });
+
+            // Set default language
+            ELEMENTS.languageSelect.value = currentLang;
+        };
+
+        // Apply localization to UI elements
+        const localizeUI = (langKey) => {
+            const localization = data[langKey]._localization;
+
+            // Header
+            ELEMENTS.title.textContent = localization.title;
+            ELEMENTS.subtitle.textContent = localization.subtitle;
+
+            // Inputs
+            ELEMENTS.patronNameInput.placeholder = localization.inputPlaceholders.patronName;
+            ELEMENTS.donationAmountInput.placeholder = localization.inputPlaceholders.amount;
+            ELEMENTS.creatorNameInput.placeholder = localization.inputPlaceholders.creatorName;
+
+            // Buttons & Labels
+            ELEMENTS.generateButton.textContent = localization.buttonText;
+            ELEMENTS.copyButton.textContent = localization.copyText;
+            ELEMENTS.messageLabel.textContent = localization.messageLabel;
+        };
+
+        // Main generation function
+        const generateThankYou = () => {
+            const patronName = ELEMENTS.patronNameInput.value.trim();
+            const donationAmount = ELEMENTS.donationAmountInput.value.trim();
+            const creatorName = ELEMENTS.creatorNameInput.value.trim();
+            const selectedTone = ELEMENTS.toneSelect.value;
+            const localization = data[currentLang]._localization;
+
+            // Input Validation
+            if (!patronName || !donationAmount || !creatorName || !selectedTone) {
+                ELEMENTS.generatedMessage.textContent = localization.error;
+                ELEMENTS.outputContainer.classList.remove('hidden');
+                ELEMENTS.copyButton.style.display = 'none'; // Hide copy button on error
+                ELEMENTS.attributionContainer.textContent = ''; // Clear attribution
+                return;
+            }
+
+            // --- ЗМІНА: Додавання знака долара до суми (як просив користувач) ---
+            const displayAmount = donationAmount + ' $';
+            // ------------------------------------------------------------------
+
+            // Get messages for the selected tone
+            const messages = data[currentLang][selectedTone];
+            const messageTemplate = getRandomMessage(messages);
+
+            // Replace placeholders in the message template
+            let finalMessage = messageTemplate
+                .replace(/\[NAME\]/g, patronName)
+                // Використовуємо нову змінну displayAmount замість donationAmount
+                .replace(/\[AMOUNT\]/g, displayAmount) 
+                .replace(/\[CREATORNAME\]/g, creatorName);
+            
+            // Display the message
+            ELEMENTS.generatedMessage.textContent = finalMessage;
+            ELEMENTS.outputContainer.classList.remove('hidden');
+            ELEMENTS.copyButton.style.display = 'block'; // Show copy button
+
+            // --- Відображення на екрані ---
+            // Відображаємо на екрані локалізований текст + посилання як текст
+            ELEMENTS.attributionContainer.innerHTML = `
+                ${localization.attributionText}: <span class="text-teal-400">${generatorLinkPlaceholder}</span>
+            `;
+            // --- КІНЕЦЬ ЗМІНИ ---
+
+            // Save creator name to local storage
+            localStorage.setItem(creatorNameStorageKey, creatorName);
+        };
+
+        // Copy functionality
+        const copyToClipboard = () => {
+            const messageText = ELEMENTS.generatedMessage.textContent;
+            const localization = data[currentLang]._localization;
+            
+            // --- ФІКС: Формат для копіювання (як просив користувач) ---
+            const attributionPrefix = localization.attributionText || data["UA"]._localization.attributionText; // Fallback
+            
+            // Формат: [Подяка]\n\n— [Локалізоване речення] [URL]
+            const messageToCopy = messageText + '\n\n— ' + attributionPrefix + ' ' + generatorLinkPlaceholder;
+            
+            // Use document.execCommand('copy') for compatibility in iframes
+            const textarea = document.createElement('textarea');
+            textarea.value = messageToCopy;
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    ELEMENTS.copyButton.textContent = localization.copiedText;
+                    ELEMENTS.copyButton.classList.add('copied');
+                    
+                    setTimeout(() => {
+                        ELEMENTS.copyButton.textContent = localization.copyText;
+                        ELEMENTS.copyButton.classList.remove('copied');
+                    }, 1500);
+                } else {
+                    console.error("Копіювання не вдалося.");
+                }
+            } catch (err) {
+                console.error('Не вдалося скопіювати текст', err);
+            }
+            document.body.removeChild(textarea);
+            // --- КІНЕЦЬ ФІКСУ ---
+        };
+
+        // --- 3. INITIALIZATION AND EVENT LISTENERS ---
+
+        const init = () => {
+            // Load creator name from local storage
+            const savedCreatorName = localStorage.getItem(creatorNameStorageKey);
+            if (savedCreatorName) {
+                ELEMENTS.creatorNameInput.value = savedCreatorName;
+            }
+
+            // Set up Buy Me a Coffee link
+            ELEMENTS.coffeeLink.href = coffeeLinkPlaceholder;
+            
+            // Populate languages and tones
+            populateLanguageOptions();
+            
+            // Initialize with default language (EN)
+            populateToneOptions(currentLang);
+            localizeUI(currentLang);
+
+            // Event Listeners
+            ELEMENTS.languageSelect.addEventListener('change', (e) => {
+                currentLang = e.target.value;
+                populateToneOptions(currentLang);
+                localizeUI(currentLang);
+                // Hide output when language changes
+                ELEMENTS.outputContainer.classList.add('hidden');
+            });
+
+            ELEMENTS.generateButton.addEventListener('click', generateThankYou);
+            ELEMENTS.copyButton.addEventListener('click', copyToClipboard);
+        };
+
+        // Run initialization on load
+        window.onload = init;
+
+    </script>
 </body>
 </html>
