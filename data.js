@@ -16,6 +16,7 @@ import { conspiracyTheoristData } from './conspiracy_theorist_data.js';
 import { madDictatorData } from './mad_dictator_data.js';
 import { disappointedProfessorData } from './disappointed_professor_data.js';
 import { vacuumSalesmanData } from './vacuum_salesman_data.js';
+import { motivationCoachData } from './motivation_coach_data.js'
 
 
 // --- 3. LOCALIZATION DATA (UI TEXT) ---
@@ -72,7 +73,8 @@ const allTones = [
     conspiracyTheoristData, 
     madDictatorData, 
     disappointedProfessorData, 
-    vacuumSalesmanData
+    vacuumSalesmanData,
+    motivationCoachData
 ];
 
 // Функція для об'єднання (злиття) даних
