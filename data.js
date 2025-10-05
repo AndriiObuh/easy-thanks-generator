@@ -8,21 +8,18 @@ export const generatorLinkPlaceholder = "https://andriiobuh.github.io/easy-thank
 
 
 // --- 2. IMPORT ALL TONE DATA FILES ---
-
-import { pirateData } from './drunken_pirate_data.js'; // З П'яним Піратом
-import { failedActorData } from './failed_actor_data.js'; // З Актором-Невдахою
-
-// !!! ВАЖЛИВО: Додайте імпорт для інших ваших файлів тут !!!
-/* import { memeArtistData } from './meme_artist_data.js';
+// Кожен файл експортує дані лише для свого стилю.
+import { pirateData } from './drunken_pirate_data.js'; 
+import { failedActorData } from './failed_actor_data.js'; 
+import { memeArtistData } from './meme_artist_data.js';
 import { conspiracyTheoristData } from './conspiracy_theorist_data.js';
 import { madDictatorData } from './mad_dictator_data.js';
 import { disappointedProfessorData } from './disappointed_professor_data.js';
 import { vacuumSalesmanData } from './vacuum_salesman_data.js';
-*/
 
 
 // --- 3. LOCALIZATION DATA (UI TEXT) ---
-
+// Ці дані не залежать від стилів, тому вони залишаються тут.
 const localizationData = {
     "UA": {
         _localization: {
@@ -71,14 +68,11 @@ const localizationData = {
 const allTones = [
     pirateData, 
     failedActorData,
-    // !!! ВАЖЛИВО: Додайте сюди інші імпортовані дані стилів !!!
-    /*
     memeArtistData, 
     conspiracyTheoristData, 
     madDictatorData, 
     disappointedProfessorData, 
     vacuumSalesmanData
-    */
 ];
 
 // Функція для об'єднання (злиття) даних
@@ -91,7 +85,7 @@ function mergeTones(locData, tonesArray) {
         for (const lang in toneData) {
             if (finalData[lang]) {
                 // Об'єднуємо стилі для цієї мови
-                // Object.assign копіює властивості з toneData[lang] у finalData[lang]
+                // Object.assign додає всі стилі з toneData[lang] до finalData[lang]
                 Object.assign(finalData[lang], toneData[lang]);
             } else {
                 finalData[lang] = toneData[lang]; 
